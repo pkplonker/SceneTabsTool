@@ -1,30 +1,53 @@
-﻿// Put this script in an Editor folder anywhere under Assets/
+﻿// Assets/Editor/MySceneToolbar.cs
 using UnityEditor;
+using UnityEditor.Overlays;
+using UnityEditor.Toolbars;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-static class SceneGameTabContextMenu
+// 1) Register a toolbar element (a simple button)
+[EditorToolbarElement(id, typeof(SceneView))]
+class MySceneButton : EditorToolbarButton, IAccessContainerWindow
 {
-	// This adds “My Scene Command” into the context menu when you right‑click
-	// the Scene tab (i.e. the SceneView window).
-	[MenuItem("CONTEXT/SceneView/My Scene Command")]
-	static void MySceneCommand(MenuCommand cmd)
+	public const string id = "MyCompany/SceneButton";
+
+	// This property is set by the overlay system to the window in which the toolbar lives
+	public EditorWindow containerWindow { get; set; }
+
+	public MySceneButton()
 	{
-		Debug.Log("Scene tab command executed!");
+		text = "My Tool";
+		tooltip = "Open My Custom Window";
+		clicked += OnClick;
 	}
 
-	// Optionally you can enable/disable it via a validate function:
-	[MenuItem("CONTEXT/SceneView/My Scene Command", true)]
-	static bool MySceneCommand_Validate(MenuCommand cmd)
+	void OnClick()
 	{
-		// for example only enable when not in play‑mode
-		return !EditorApplication.isPlaying;
+		// Show your custom window however you like
+		MyCustomWindow.ShowWindow();
 	}
+}
 
-	// This adds “My Game Command” into the context menu when you right‑click
-	// the Game tab (i.e. the GameView window).
-	[MenuItem("CONTEXT/GameView/My Game Command")]
-	static void MyGameCommand(MenuCommand cmd)
+// 2) Define the ToolbarOverlay that pulls in that element
+[Overlay(typeof(SceneView), "My Scene Tools", true)]
+[Icon("Packages/com.mycompany.mytool/icon.png")]    // optional icon
+class MySceneToolbarOverlay : ToolbarOverlay
+{
+	// The base constructor takes the IDs of the toolbar elements you want to include
+	public MySceneToolbarOverlay() : base(
+		MySceneButton.id
+		// you can list more IDs here if you add more elements
+	) { }
+}
+
+// 3) Your custom window
+public class MyCustomWindow : EditorWindow
+{
+	public static void ShowWindow()
+		=> GetWindow<MyCustomWindow>("My Tool");
+
+	void OnGUI()
 	{
-		Debug.Log("Game tab command executed!");
+		GUILayout.Label("Hello from MyCustomWindow");
 	}
 }

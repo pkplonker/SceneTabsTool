@@ -64,7 +64,7 @@ public class SceneTabInjector
 			return;
 		}
 
-		var pocView = ScriptableObject.CreateInstance<SceneView>();
+		var pocView = ScriptableObject.CreateInstance<CustomSceneView>();
 		pocView.titleContent = new GUIContent("POC_Tab");
 
 		var panesList = panesField.GetValue(targetDock) as IList;
@@ -76,5 +76,10 @@ public class SceneTabInjector
 		{
 			addTabMethod.Invoke(targetDock, new object[] {panesList.Count, pocView, true});
 		}
+	}
+
+	public class CustomSceneView : SceneView
+	{
+		
 	}
 }

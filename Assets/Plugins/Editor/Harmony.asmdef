@@ -1,8 +1,8 @@
 {
-    "name": "SceneTabs",
-    "rootNamespace": "SceneTabs",
+    "name": "Harmony",
+    "rootNamespace": "",
     "references": [
-        "Harmony"
+        "GUID:aaeeb3f24b038b149a6d7066f614f8c5"
     ],
     "includePlatforms": [
         "Editor"
